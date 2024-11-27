@@ -1,0 +1,41 @@
+import time
+import random
+
+#сортування вставками
+def insertion_sort(arr):
+    comparisons = 0
+    assignments = 0
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+            comparisons += 1
+            assignments += 1
+        arr[j + 1] = key
+        assignments += 1
+    return comparisons, assignments
+
+#генерація даних та аналіз часу
+def test_sorting(n, data_type):
+    if data_type == "random":
+        data = [random.randint(1, 1000) for _ in range(n)]
+    elif data_type == "ascending":
+        data = list(range(1, n + 1))
+    elif data_type == "descending":
+        data = list(range(n, 0, -1))
+    start_time = time.time()
+    comparisons, assignments = insertion_sort(data)
+    end_time = time.time()
+    return end_time - start_time, comparisons, assignments
+
+#виконання
+sizes = [10, 100, 1000, 5000, 10000]
+types = ["random", "ascending", "descending"]
+results = []
+
+for n in sizes:
+    for t in types:
+        duration, comparisons, assignments = test_sorting(n, t)
+        results.append((n, t, duration, comparisons, assignments))
