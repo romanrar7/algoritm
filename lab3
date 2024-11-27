@@ -1,0 +1,40 @@
+import random
+
+class HashTable:
+    def __init__(self, size):
+        self.size = size
+        self.table = [[] for _ in range(size)]
+
+    def hash_function(self, key):
+        return key % self.size
+
+    def insert(self, key):
+        index = self.hash_function(key)
+        self.table[index].append(key)
+
+    def remove(self, key):
+        index = self.hash_function(key)
+        if key in self.table[index]:
+            self.table[index].remove(key)
+
+    def display(self):
+        for i, bucket in enumerate(self.table):
+            print(f"Index {i}: {bucket}")
+
+#розрахунок розміру таблиці
+N = 7 * 5 + 50  # Кількість елементів
+S = int(N * 0.75)  # Розмір таблиці
+
+#створення геш-таблиці та заповнення її випадковими числами
+hash_table = HashTable(S)
+random_numbers = [random.randint(1, 1000) for _ in range(N)]
+for num in random_numbers:
+    hash_table.insert(num)
+
+#видалення парних чисел
+for num in random_numbers:
+    if num % 2 == 0:
+        hash_table.remove(num)
+
+#виведення елементів, що залишилися
+hash_table.display()
