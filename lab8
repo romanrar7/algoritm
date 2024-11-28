@@ -1,0 +1,52 @@
+import random
+import time
+
+def partition(arr, low, high):
+    pivot = arr[high]
+    i = low - 1
+
+    for j in range(low, high):
+        if arr[j] <= pivot:
+            i = i + 1
+            arr[i], arr[j] = arr[j], arr[i]
+
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+
+def quick_sort(arr, low, high):
+    if low < high:
+        pi = partition(arr, low, high)
+        quick_sort(arr, low, pi - 1)
+        quick_sort(arr, pi + 1, high)
+
+def generate_data(size, order='random'):
+    if order == 'ascending':
+        return list(range(size))
+    elif order == 'descending':
+        return list(range(size, 0, -1))
+    else:
+        return [random.randint(1, 100000) for _ in range(size)]
+
+def measure_sort_time(size, order):
+    data = generate_data(size, order)
+    start_time = time.time()
+    quick_sort(data, 0, len(data) - 1)
+    end_time = time.time()
+    return end_time - start_time
+
+def main():
+    sizes = [10, 100, 1000, 5000, 10000]
+    orders = ['випадковий', 'зростаючий', 'спадковий']
+    results = []
+
+    for size in sizes:
+        for order in orders:
+            time_taken = measure_sort_time(size, order)
+            results.append((size, order, time_taken))
+
+    print('size\torder\ttime')
+    for result in results:
+        print(f'{result[0]}\t{result[1]}\t{result[2]:.5f}')
+
+if __name__ == '__main__':
+    main()
