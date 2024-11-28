@@ -1,0 +1,126 @@
+import random
+import time
+
+def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
+
+        merge_sort(left_half)
+        merge_sort(right_half)
+
+        i = j = k = 0
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i] < right_half[j]:
+                arr[k] = left_half[i]
+                i += 1
+            else:
+                arr[k] = right_half[j]
+                j += 1
+            k += 1
+
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+
+def generate_data(size, order='random'):
+    if order == 'ascending':
+        return list(range(size))
+    elif order == 'descending':
+        return list(range(size, 0, -1))
+    else:
+        return [random.randint(1, 100000) for _ in range(size)]
+
+def measure_sort_time(size, order):
+    data = generate_data(size, order)
+    start_time = time.time()
+    merge_sort(data)
+    end_time = time.time()
+    return end_time - start_time
+
+def main():
+    sizes = [10, 100, 1000, 5000, 10000]
+    orders = ['random', 'ascending', 'descending']
+    results = []
+
+    for size in sizes:
+        for order in orders:
+            time_taken = measure_sort_time(size, order)
+            results.append((size, order, time_taken))
+
+    print('size\torder\ttime')
+    for result in results:
+        print(f'{result[0]}\t{result[1]}\t{result[2]:.5f}')
+
+if __name__ == '__main__':
+    main()
+import random
+import time
+
+def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
+
+        merge_sort(left_half)
+        merge_sort(right_half)
+
+        i = j = k = 0
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i] < right_half[j]:
+                arr[k] = left_half[i]
+                i += 1
+            else:
+                arr[k] = right_half[j]
+                j += 1
+            k += 1
+
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+
+def generate_data(size, order='random'):
+    if order == 'ascending':
+        return list(range(size))
+    elif order == 'descending':
+        return list(range(size, 0, -1))
+    else:
+        return [random.randint(1, 100000) for _ in range(size)]
+
+def measure_sort_time(size, order):
+    data = generate_data(size, order)
+    start_time = time.time()
+    merge_sort(data)
+    end_time = time.time()
+    return end_time - start_time
+
+def main():
+    sizes = [10, 100, 1000, 5000, 10000]
+    orders = ['випадковий', 'зростаючий', 'спадний']
+    results = []
+
+    for size in sizes:
+        for order in orders:
+            time_taken = measure_sort_time(size, order)
+            results.append((size, order, time_taken))
+
+    print('size\torder\ttime')
+    for result in results:
+        print(f'{result[0]}\t{result[1]}\t{result[2]:.5f}')
+
+if __name__ == '__main__':
+    main()
