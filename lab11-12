@@ -1,0 +1,82 @@
+import heapq
+
+#алгоритм прима
+def prim(graph, start):
+    mst = []
+    visited = set()
+    min_heap = [(0, start, None)]
+    
+    while len(visited) < len(graph):
+        weight, current, previous = heapq.heappop(min_heap)
+        if current not in visited:
+            visited.add(current)
+            if previous is not None:
+                mst.append((previous, current, weight))
+            for neighbor, cost in graph[current]:
+                if neighbor not in visited:
+                    heapq.heappush(min_heap, (cost, neighbor, current))
+                    
+    return mst
+
+#а тут алгоритм крускаля
+def kruskal(graph):
+    def find(parent, i):
+        if parent[i] == i:
+            return i
+        return find(parent, parent[i])
+
+    def union(parent, rank, x, y):
+        root_x = find(parent, x)
+        root_y = find(parent, y)
+        if rank[root_x] < rank[root_y]:
+            parent[root_x] = root_y
+        elif rank[root_x] > rank[root_y]:
+            parent[root_y] = root_x
+        else:
+            parent[root_y] = root_x
+            rank[root_x] += 1
+
+    edges = []
+    for node in graph:
+        for neighbor, weight in graph[node]:
+            edges.append((weight, node, neighbor))
+    edges.sort()
+
+    parent = {}
+    rank = {}
+    for node in graph:
+        parent[node] = node
+        rank[node] = 0
+
+    mst = []
+    for weight, u, v in edges:
+        if find(parent, u) != find(parent, v):
+            union(parent, rank, u, v)
+            mst.append((u, v, weight))
+
+    return mst
+
+def main():
+    #наший граф
+    graph = {
+        1: [(2, 1), (3, 4), (4, 8)],
+        2: [(1, 1), (3, 4), (5, 3)],
+        3: [(1, 4), (2, 4), (6, 8)],
+        4: [(1, 8), (5, 5), (6, 7)],
+        5: [(2, 3), (4, 5), (6, 2), (9, 9)],
+        6: [(3, 8), (4, 7), (5, 2), (7, 4)],
+        7: [(6, 4), (8, 11)],
+        8: [(7, 11), (9, 9)],
+        9: [(5, 9), (8, 9)]
+    }
+
+    #алгоритм прима
+    mst_prim = prim(graph, 1)
+    print("MST за алгоритмом Прима:", mst_prim)
+
+    #алгоритм крускаль
+    mst_kruskal = kruskal(graph)
+    print("MST за алгоритмом Крускала:", mst_kruskal)
+
+if __name__ == '__main__':
+    main()
