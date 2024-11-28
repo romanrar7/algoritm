@@ -1,0 +1,43 @@
+import random
+import time
+
+def insertion_sort(arr):
+    for j in range(1, len(arr)):
+        key = arr[j]
+        i = j - 1
+        while i >= 0 and arr[i] > key:
+            arr[i + 1] = arr[i]
+            i -= 1
+        arr[i + 1] = key
+
+def generate_data(size, order='random'):
+    if order == 'ascending':
+        return list(range(size))
+    elif order == 'descending':
+        return list(range(size, 0, -1))
+    else:
+        return [random.randint(1, 100000) for _ in range(size)]
+
+def measure_sort_time(size, order):
+    data = generate_data(size, order)
+    start_time = time.time()
+    insertion_sort(data)
+    end_time = time.time()
+    return end_time - start_time
+
+def main():
+    sizes = [10, 100, 1000, 5000, 10000]
+    orders = ['random', 'висхідний', 'спадний']
+    results = []
+
+    for size in sizes:
+        for order in orders:
+            time_taken = measure_sort_time(size, order)
+            results.append((size, order, time_taken))
+
+    print('siiiize\torder\ttime')
+    for result in results:
+        print(f'{result[0]}\t{result[1]}\t{result[2]:.5f}')
+
+if __name__ == '__main__':
+    main()
