@@ -1,19 +1,19 @@
 import heapq
 from collections import Counter, namedtuple
 
-class Node(namedtuple("Node", ["char", "freq"])):
+class Node(namedtuple("Node", ["char", "freq", "left", "right"])):
     def __lt__(self, other):
         return self.freq < other.freq
 
 def build_huffman_tree(text):
     frequency = Counter(text)
-    heap = [Node(char, freq) for char, freq in frequency.items()]
+    heap = [Node(char, freq, None, None) for char, freq in frequency.items()]
     heapq.heapify(heap)
 
     while len(heap) > 1:
         left = heapq.heappop(heap)
         right = heapq.heappop(heap)
-        merged = Node(None, left.freq + right.freq)
+        merged = Node(None, left.freq + right.freq, left, right)
         heapq.heappush(heap, merged)
 
     return heap[0]
@@ -22,9 +22,10 @@ def gencod(node, prefix="", codebook={}):
     if node.char is not None:
         codebook[node.char] = prefix
     else:
-        if isinstance(node, Node):
-            gencod(heapq.heappop(node), prefix + "0", codebook)
-            gencod(heapq.heappop(node), prefix + "1", codebook)
+        if node.left is not None:
+            gencod(node.left, prefix + "0", codebook)
+        if node.right is not None:
+            gencod(node.right, prefix + "1", codebook)
     return codebook
 
 def huffmanencod(text):
@@ -46,14 +47,14 @@ def huffmandecod(encoded_text, codebook):
 
 def main():
     text = "трирядне слово з вибраного варіанту"
-    print(f"оригінальний текст: {text}")
+    print(f"Оригінальний текст: {text}")
 
     encoded_text, codebook = huffmanencod(text)
-    print(f"закодований текст: {encoded_text}")
-    print(f"кодування символів: {codebook}")
+    print(f"Закодований текст: {encoded_text}")
+    print(f"Кодування символів: {codebook}")
 
     decoded_text = huffmandecod(encoded_text, codebook)
-    print(f"розкодований текст: {decoded_text}")
+    print(f"Розкодований текст: {decoded_text}")
 
 if __name__ == '__main__':
     main()
