@@ -1,0 +1,44 @@
+import random
+
+def fitness(x1, x2):
+    return (x1 - 2)**2 + (x2 - 4)**2
+
+#генетичний алгоритм
+def genetic_algorithm():
+    population_size = 100
+    generations = 50
+    mutation_rate = 0.1
+
+    #початкова популяція
+    population = [(random.uniform(0, 10), random.uniform(0, 10)) for _ in range(population_size)]
+
+    for generation in range(generations):
+        #оцінка
+        fitness_values = [(individual, fitness(individual[0], individual[1])) for individual in population]
+        fitness_values.sort(key=lambda x: x[1])  # Сортування за мінімальним значенням функції (мінімізація)
+
+        selected_individuals = [individual for individual, value in fitness_values[:population_size // 2]]
+
+        # Схрещування для отримання нових індивідів
+        next_generation = []
+        while len(next_generation) < population_size:
+            parent1 = random.choice(selected_individuals)
+            parent2 = random.choice(selected_individuals)
+            child1 = ((parent1[0] + parent2[0]) / 2, (parent1[1] + parent2[1]) / 2)
+            next_generation.append(child1)
+
+        #мутація
+        for i in range(len(next_generation)):
+            if random.random() < mutation_rate:
+                next_generation[i] = (next_generation[i][0] + random.uniform(-1, 1), next_generation[i][1] + random.uniform(-1, 1))
+
+        #оновлюєм популяцію
+        population = next_generation
+
+    #повертає найкращий результат
+    best_individual = min(population, key=lambda x: fitness(x[0], x[1]))
+    return best_individual, fitness(best_individual[0], best_individual[1])
+
+best_solution, best_value = genetic_algorithm()
+print(f"Найкраще рішення: x1 = {best_solution[0]}, x2 = {best_solution[1]}")
+print(f"Значення цільової функції: {best_value}")
